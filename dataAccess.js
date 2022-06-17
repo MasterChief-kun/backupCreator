@@ -41,11 +41,11 @@ function copyFolderRecursiveSync(source, target, targetPath) {
   var files = [];
 
   // Check if folder needs to be created or integrated
-  //var targetFolder = path.join(target, path.basename(source));
-  var targetFolder = targetPath;
-  //if (!fs.existsSync(targetFolder)) {
-  // fs.mkdirSync(targetFolder);
-  //}
+  var targetFolder = path.join(target, path.basename(source));
+  //var targetFolder = targetPath;
+  if (!fs.existsSync(targetFolder)) {
+   fs.mkdirSync(targetFolder);
+  }
 
   // Copy
   if (fs.lstatSync(source).isDirectory()) {
