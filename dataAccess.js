@@ -1,4 +1,5 @@
 const sqlite3 = require("sqlite3").verbose();
+const kill = require("tree-kill")
 const fs = require("fs");
 const path = require("path");
 const { spawn } = require("child_process");
@@ -94,18 +95,23 @@ function backupDB(pass, _callback) {
   db.each("SELECT db from dbs", (err, db) => {
     if (err) return console.log(`[ERR ${err}`);
     if (db.db == "mysql") {
+      var path = `${__dirname}/tmp/databases/mysqlBackup.${getDate()}.sql`
       //            var backupProc = spawnSync(`mysql -u root -p --all-databases > ./tmp/databases/mysqlBackup.${getDate()}.sql`)
       var backupProc = spawn(
         "sh",
         [
           "-c",
-          `"mysqldump -u root -p --all-databases --skip-lock-tables > ${__dirname}/tmp/databases/mysqlBackup.${getDate()}.sql"`
+          `mysqldump -u root -p --all-databases --skip-lock-tables > ${path}`
         ]
       )
       //var backupProc = spawn("sh",["-c","mysql","-u","root","-p","--all-databases","--skip-lock-tables",">",`${__dirname}/tmp/databases/mysqlBackup.${getDate()}.sql`])
       backupProc.stdin.setDefaultEncoding('utf-8');
       backupProc.stdin.write(pass + "\n");
-      backupProc.kill('SIGKILL');
+      backupProc.stdin.end();
+      kill(backupProc.pid);
+      /*while(!fs.existsSync(path)) {
+
+      }*/
       console.log("[DB] Copied mysql backup to ./tmp/databases");
     } else {
       console.log("[ERR] Database not yet supported or invalid input");
