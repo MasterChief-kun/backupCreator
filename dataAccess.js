@@ -106,7 +106,7 @@ function backupDB(pass, _callback) {
       backupProc.stdin.setDefaultEncoding('utf-8');
       backupProc.stdin.write(pass + "\n");
       backupProc.stdin.end();
-      backupProc.kill(2);
+      backupProc.kill('SIGKILL');
       console.log("[DB] Copied mysql backup to ./tmp/databases");
     } else {
       console.log("[ERR] Database not yet supported or invalid input");
