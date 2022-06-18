@@ -110,7 +110,9 @@ async function redeemCode(code) {
     }
   );
   readline.prompt();
-  console.log(x);
+
+  secrets.access_token = x.data.access_token;
+  secrets.refresh_token = x.data.refresh_token;
 }
 if (secrets.access_token == "") {
   console.log(`Visit this url and login with your account: ${uri}`);
