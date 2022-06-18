@@ -102,7 +102,8 @@ function backupDB(pass, _callback) {
           "-c",
           `mysqldump -u root -p --all-databases --skip-lock-tables > ${__dirname}/tmp/databases/mysqlBackup.${getDate()}.sql`
         ]
-      ).stdin.write(pass + "\n");
+      )
+      backupProc.stdin.write(pass, "\n");
       backupProc.stdin.end();
       console.log("[DB] Copied mysql backup to ./tmp/databases");
     } else {
