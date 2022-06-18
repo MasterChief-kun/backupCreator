@@ -95,16 +95,18 @@ function backupDB(pass, _callback) {
     if (err) return console.log(`[ERR ${err}`);
     if (db.db == "mysql") {
       //            var backupProc = spawnSync(`mysql -u root -p --all-databases > ./tmp/databases/mysqlBackup.${getDate()}.sql`)
-      var backupProc = spawn(
+      /*var backupProc = spawn(
         "sh",
         [
           "-c",
           `mysqldump -u root -p --all-databases --skip-lock-tables > ${__dirname}/tmp/databases/mysqlBackup.${getDate()}.sql`
         ]
-      )
+      )*/
+      var backupProc = spawn("sh",["-c","mysql","-u","root","-p","--all-databases","--skip-lock-tables",">",`${__dirname}/tmp/databases/mysqlBackup.${getDate()}.sql`])
       backupProc.stdin.setDefaultEncoding('utf-8');
       backupProc.stdin.write(pass + "\n");
       backupProc.stdin.end();
+      backupProc
       console.log("[DB] Copied mysql backup to ./tmp/databases");
     } else {
       console.log("[ERR] Database not yet supported or invalid input");
