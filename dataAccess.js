@@ -90,10 +90,10 @@ function backupPaths(_callback) {
   _callback();
 }
 
-function backupDB(pass = "", _callback) {
+function backupDB(pass, _callback) {
   db.each("SELECT db from dbs", (err, db) => {
     if (err) return console.log(`[ERR ${err}`);
-
+    console.log(pass);
     if (db.db == "mysql") {
       //            var backupProc = spawnSync(`mysql -u root -p --all-databases > ./tmp/databases/mysqlBackup.${getDate()}.sql`)
       var backupProc = spawn(
@@ -101,11 +101,7 @@ function backupDB(pass = "", _callback) {
         [
           "-c",
           `mysqldump -u root -p --all-databases --skip-lock-tables > ${__dirname}/tmp/databases/mysqlBackup.${getDate()}.sql`
-        ],
-        {
-          stdio: "inherit",
-          stdin: "inherit",
-        }
+        ]
       ).stdin.write(pass + "\n");
 
       console.log("[DB] Copied mysql backup to ./tmp/databases");
