@@ -97,15 +97,10 @@ function backupDB(pass = "", _callback) {
     if (db.db == "mysql") {
       //            var backupProc = spawnSync(`mysql -u root -p --all-databases > ./tmp/databases/mysqlBackup.${getDate()}.sql`)
       var backupProc = spawn(
-        "mysqldump",
+        "sh",
         [
-          "-u",
-          "root",
-          "-p",
-          "--all-databases",
-          "--skip-lock-tables",
-          ">",
-          `${__dirname}/tmp/databases/mysqlBackup.${getDate()}.sql`,
+          "-c",
+          `mysqldump -u root -p --all-databases --skip-lock-tables > ${__dirname}/tmp/databases/mysqlBackup.${getDate()}.sql`
         ],
         {
           stdio: "inherit",
