@@ -93,7 +93,6 @@ function backupPaths(_callback) {
 function backupDB(pass, _callback) {
   db.each("SELECT db from dbs", (err, db) => {
     if (err) return console.log(`[ERR ${err}`);
-    console.log(pass);
     if (db.db == "mysql") {
       //            var backupProc = spawnSync(`mysql -u root -p --all-databases > ./tmp/databases/mysqlBackup.${getDate()}.sql`)
       var backupProc = spawn(
@@ -104,7 +103,7 @@ function backupDB(pass, _callback) {
         ]
       )
       backupProc.stdin.setDefaultEncoding('utf-8');
-      backupProc.stdin.write(pass, "\n");
+      backupProc.stdin.write(pass + "\n");
       backupProc.stdin.end();
       console.log("[DB] Copied mysql backup to ./tmp/databases");
     } else {
