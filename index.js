@@ -16,7 +16,7 @@ const uri = `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?clie
 }&scope=${secrets.scopes.join("%20")}&response_type=${
   secrets.response_type
 }&redirect_uri=${secrets.redirect_uri}`;
-const pass = process.env.pass
+const pass = process.env.pass;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -46,7 +46,7 @@ app.get("/", async (req, res) => {
 });
 app.post("/backup", (req, res) => {
   var checkPass = req.body.pass;
-  if(pass == checkPass) {
+  if (pass == checkPass) {
     var toBackup = req.body.cons;
 
     console.log("[M] Valid Backup request received. Starting Backup for: \n");
@@ -56,7 +56,7 @@ app.post("/backup", (req, res) => {
     //}
     console.log(toBackup);
 
-    if(toBackup == "all") {
+    if (toBackup == "all") {
       process.stdout.write("[M] Backing Up Files And Folders...");
       dataAccess.backupPaths();
       process.stdout.write("Done\n[M] Backing Up Databases...");
@@ -66,32 +66,25 @@ app.post("/backup", (req, res) => {
       process.stdout.write("Done\n[M]Compressing Backups to zip...");
       dataAccess.zipBackup(backupPath);
       console.log(`Done! Backup has been written to ${backupPath}`);
-
-    } else if(toBackup == "paths") {
-       process.stdout.write("[M] Backing Up Files And Folders...");
-       dataAccess.backupPaths(function (){
-
-         var backupPath = `/backup.${dataAccess.getDate()}.zip`;
-         process.stdout.write("Done\n[M]Compressing Backups to zip...");
-         dataAccess.zipBackup(backupPath);
-         console.log(`Done! Backup has been written to ${backupPath}`);
-
-      });
-
-    } else if(toBackup == "dbs") {
-      process.stdout.write("[M] Backing Up Databases...");
-      dataAccess.backupDB(function (){
-
+    } else if (toBackup == "paths") {
+      process.stdout.write("[M] Backing Up Files And Folders...");
+      dataAccess.backupPaths(function () {
         var backupPath = `/backup.${dataAccess.getDate()}.zip`;
         process.stdout.write("Done\n[M]Compressing Backups to zip...");
         dataAccess.zipBackup(backupPath);
         console.log(`Done! Backup has been written to ${backupPath}`);
-
+      });
+    } else if (toBackup == "dbs") {
+      process.stdout.write("[M] Backing Up Databases...");
+      dataAccess.backupDB(req.body.dbpass, function () {
+        var backupPath = `/backup.${dataAccess.getDate()}.zip`;
+        process.stdout.write("Done\n[M]Compressing Backups to zip...");
+        dataAccess.zipBackup(backupPath);
+        console.log(`Done! Backup has been written to ${backupPath}`);
       });
     }
-
   }
-})
+});
 
 async function redeemCode(code) {
   var data = new url.URLSearchParams({

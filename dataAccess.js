@@ -5,23 +5,21 @@ const { spawn } = require("child_process");
 const db = new sqlite3.Database("./data/data.sqlite");
 const archiver = require("archiver");
 
-
 function init() {
-  if(!fs.existsSync(`${__dirname}/tmp`)){
-        fs.mkdirSync(`${__dirname}/tmp`);
+  if (!fs.existsSync(`${__dirname}/tmp`)) {
+    fs.mkdirSync(`${__dirname}/tmp`);
   }
-  if(!fs.existsSync(`${__dirname}/tmp/databases`)){
-    fs.mkdirSync(`${__dirname}/tmp/databases`, {recursive: true});
+  if (!fs.existsSync(`${__dirname}/tmp/databases`)) {
+    fs.mkdirSync(`${__dirname}/tmp/databases`, { recursive: true });
   }
-  if(!fs.existsSync(`${__dirname}/tmp/directories`)){
-    fs.mkdirSync(`${__dirname}/tmp/directories`, {recursive: true});
+  if (!fs.existsSync(`${__dirname}/tmp/directories`)) {
+    fs.mkdirSync(`${__dirname}/tmp/directories`, { recursive: true });
   }
-
 }
 function getDate() {
   var currTime = new Date();
 
-  var retString = `${currTime.getDate()}-${currTime.getMonth()}-${currTime.getFullYear()}::${currTime.getHours()}:${currTime.getMinutes()}`
+  var retString = `${currTime.getDate()}-${currTime.getMonth()}-${currTime.getFullYear()}::${currTime.getHours()}:${currTime.getMinutes()}`;
   return retString;
 }
 function copyFileSync(source, target) {
@@ -44,7 +42,7 @@ function copyFolderRecursiveSync(source, target, targetPath) {
   var targetFolder = path.join(target, path.basename(source));
   //var targetFolder = targetPath;
   if (!fs.existsSync(targetFolder)) {
-   fs.mkdirSync(targetFolder);
+    fs.mkdirSync(targetFolder);
   }
 
   // Copy
@@ -69,9 +67,11 @@ function backupPaths(_callback) {
       var check = fs.statSync(path);
       console.log("Found path...");
       if (check.isDirectory()) {
-        var targetPath = `${__dirname}/tmp/directories/${path.split("/").at(-1)}.${getDate()}`;
-        fs.mkdirSync(targetPath, {recursive: true});
-        copyFolderRecursiveSync(path,targetPath, targetPath);
+        var targetPath = `${__dirname}/tmp/directories/${path
+          .split("/")
+          .at(-1)}.${getDate()}`;
+        fs.mkdirSync(targetPath, { recursive: true });
+        copyFolderRecursiveSync(path, targetPath, targetPath);
 
         console.log(`[D] Copied ${path} into ${targetPath}`);
       } else if (check.isFile()) {
@@ -149,5 +149,5 @@ module.exports = {
   backupPaths,
   zipBackup,
   getDate,
-  init
-}
+  init,
+};
