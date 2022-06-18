@@ -94,17 +94,16 @@ function backupDB(pass = "", _callback) {
   db.each("SELECT db from dbs", (err, db) => {
     if (err) return console.log(`[ERR ${err}`);
 
-    if (db == "mysql") {
+    if (db.db == "mysql") {
       //            var backupProc = spawnSync(`mysql -u root -p --all-databases > ./tmp/databases/mysqlBackup.${getDate()}.sql`)
       var backupProc = spawn(
-        "sh",
+        "mysqldump",
         [
-          "-c",
-          "mysql",
           "-u",
           "root",
           "-p",
           "--all-databases",
+          "--skip-lock-tables",
           ">",
           `${__dirname}/tmp/databases/mysqlBackup.${getDate()}.sql`,
         ],
