@@ -105,7 +105,6 @@ function backupDB(pass, _callback) {
       //var backupProc = spawn("sh",["-c","mysql","-u","root","-p","--all-databases","--skip-lock-tables",">",`${__dirname}/tmp/databases/mysqlBackup.${getDate()}.sql`])
       backupProc.stdin.setDefaultEncoding('utf-8');
       backupProc.stdin.write(pass + "\n");
-      backupProc.stdin.end();
       backupProc.kill('SIGKILL');
       console.log("[DB] Copied mysql backup to ./tmp/databases");
     } else {
